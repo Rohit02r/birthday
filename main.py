@@ -5,10 +5,10 @@ from mail_service import send_email
 
 app = FastAPI()
 
-# allow frontend access
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -35,6 +35,8 @@ Course: {data.course}
 Message: {data.message}
 """
 
-    send_email(email_body)
-
-    return {"status": "mail sent successfully"}
+    try:
+        send_email(email_body)
+        return {"status": "mail sent successfully"}
+    except Exception as e:
+        return {"status": "mail failed", "error": str(e)}
